@@ -4,12 +4,15 @@ import static java.util.Arrays.asList;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class Options {
-  private OptionParser optionParser;
-  private OptionSet optionSet;
+  private final OptionParser optionParser;
+  private final OptionSet optionSet;
+  private final Map<String, OptionSpec<?>> recognizedOptions;
 
   @SuppressWarnings("unused")
   private Options() { throw new AssertionError("This is not the constructor you are looking for."); }
@@ -84,6 +87,8 @@ public class Options {
         .forHelp();
 
     optionSet = optionParser.parse(arguments);
+
+    recognizedOptions = optionParser.recognizedOptions();
   }
 
   public void printHelp() {
@@ -102,19 +107,5 @@ public class Options {
     return optionSet.hasArgument(option);
   }
 
-  public Object valueOf(String option) {
-    return optionSet.valueOf(option);
-  }
-
-  public <T> T valueOf(String option, Class<T> clazz) {
-    return clazz.cast(optionSet.valueOf(option));
-  }
-
-  public Integer integerValueOf(String option) {
-    return valueOf(option, Integer.class);
-  }
-
-  public String stringValueOf(String option) {
-    return valueOf(option, String.class);
-  }
+  public <T> T valueOf(String option) { return (T) optionSet.valueOf(recognizedOptions.get(option)); }
 }

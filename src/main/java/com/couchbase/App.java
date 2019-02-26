@@ -65,9 +65,9 @@ public class App {
     OPS.setOps(options);
 
     while (true) {
-      while (count.get() > options.integerValueOf("queue")) {
+      while (count.get() > options.<Integer>valueOf("queue")) {
         try {
-          TimeUnit.MICROSECONDS.sleep(options.integerValueOf("delay"));
+          TimeUnit.MICROSECONDS.sleep(options.valueOf("delay"));
         } catch (InterruptedException ex) {
           // do nothing
         }
@@ -91,22 +91,22 @@ public class App {
   }
 
   private static void initTracers(Options options) {
-    if ("threshold".equals(options.stringValueOf("tracer"))) {
+    if ("threshold".equals(options.valueOf("tracer"))) {
       appTracer = ThresholdLogTracer.create(ThresholdLogReporter.builder().pretty(true).build());
 
       couchbaseTracer = ThresholdLogTracer.create(ThresholdLogReporter.builder()
-          .kvThreshold(options.integerValueOf("kv-threshold"), TimeUnit.MILLISECONDS)
-          .n1qlThreshold(options.integerValueOf("n1ql-threshold"), TimeUnit.MILLISECONDS)
-          .logInterval(options.integerValueOf("log"), TimeUnit.SECONDS)
-          .sampleSize(options.integerValueOf("sample"))
+          .kvThreshold(options.valueOf("kv-threshold"), TimeUnit.MILLISECONDS)
+          .n1qlThreshold(options.valueOf("n1ql-threshold"), TimeUnit.MILLISECONDS)
+          .logInterval(options.valueOf("log"), TimeUnit.SECONDS)
+          .sampleSize(options.valueOf("sample"))
           .pretty(true)
           .build());
 
       return;
     }
 
-    if ("jaeger".equals(options.stringValueOf("tracer"))) {
-      System.setProperty("JAEGER_AGENT_HOST", System.getProperty("JAEGER_AGENT_HOST", options.stringValueOf("jaeger-host")));
+    if ("jaeger".equals(options.valueOf("tracer"))) {
+      System.setProperty("JAEGER_AGENT_HOST", System.getProperty("JAEGER_AGENT_HOST", options.valueOf("jaeger-host")));
       System.setProperty("JAEGER_AGENT_PORT", System.getProperty("JAEGER_AGENT_PORT", "6831"));
       System.setProperty("JAEGER_SAMPLER_TYPE", System.getProperty("JAEGER_SAMPLER_TYPE", "const"));
       System.setProperty("JAEGER_SAMPLER_PARAM", System.getProperty("JAEGER_SAMPLER_PARAM", "1"));
@@ -118,7 +118,7 @@ public class App {
       return;
     }
 
-    throw new IllegalArgumentException("Unknown tracer requested: " + options.stringValueOf("tracer"));
+    throw new IllegalArgumentException("Unknown tracer requested: " + options.valueOf("tracer"));
   }
 
   private enum OPS {
@@ -146,9 +146,9 @@ public class App {
     }
 
     public static void setOps(Options options) {
-      String list = options.stringValueOf("execute");
+      String list = options.valueOf("execute");
 
-      query = N1qlQuery.simple(options.stringValueOf("n1ql"));
+      query = N1qlQuery.simple(options.<String>valueOf("n1ql"));
 
       if ("all".equals(list)) return;
 
@@ -165,9 +165,9 @@ public class App {
   }
 
   private static void openBucket(Options options, Tracer tracer) {
-    List<String> nodes = Arrays.asList(options.stringValueOf("cluster").split(","));
+    List<String> nodes = Arrays.asList(options.<String>valueOf("cluster").split(","));
 
-    bucketName = options.stringValueOf("bucket");
+    bucketName = options.valueOf("bucket");
 
     Cluster cluster = CouchbaseCluster.create(DefaultCouchbaseEnvironment.builder()
         .tracer(tracer)
@@ -175,7 +175,7 @@ public class App {
         .operationTracingServerDurationEnabled(true)
         .build(), nodes);
 
-    cluster.authenticate(options.stringValueOf("user"), options.stringValueOf("password"));
+    cluster.authenticate(options.valueOf("user"), options.valueOf("password"));
 
     bucket = cluster.openBucket(bucketName).async();
   }
@@ -190,7 +190,7 @@ public class App {
 
     total = docIDs.size();
 
-    range = options.integerValueOf("range");
+    range = options.valueOf("range");
 
     if (-1 == range) range = total;
 
