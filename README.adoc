@@ -1,0 +1,14 @@
+# Response Time Observability Exerciser
+
+image:https://img.shields.io/badge/Couchbase-v6.0.0-red.svg[link=https://www.couchbase.com/downloads] image:https://img.shields.io/badge/License-Apache%202.0-green.svg[link=https://opensource.org/licenses/Apache-2.0]
+
+Demonstration application for understanding response time observability.
+
+The application uses the Couchbase Java SDK.
+It performs random operations against a Couchbase bucket.
+
+The design has been optimized to generate a high request rate.
+
+
+
+Licensed under link:https://opensource.org/licenses/Apache-2.0[Apache 2.0].
