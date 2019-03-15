@@ -43,16 +43,16 @@ public class Options {
         .defaultsTo("threshold");
     optionParser.acceptsAll(asList("l", "log"))
         .withRequiredArg()
-        .ofType(Integer.class)
-        .defaultsTo(10);
+        .ofType(Long.class)
+        .defaultsTo((long)10);
     optionParser.acceptsAll(asList("K", "kv-threshold"))
         .withRequiredArg()
-        .ofType(Integer.class)
-        .defaultsTo(10);
+        .ofType(Long.class)
+        .defaultsTo((long) 10);
     optionParser.acceptsAll(asList("N", "n1ql-threshold"))
         .withRequiredArg()
-        .ofType(Integer.class)
-        .defaultsTo(100);
+        .ofType(Long.class)
+        .defaultsTo((long) 100);
 
     optionParser.acceptsAll(asList("j", "jaeger-host"))
         .withRequiredArg()
@@ -60,12 +60,12 @@ public class Options {
 
     optionParser.acceptsAll(asList("q", "queue"))
         .withRequiredArg()
-        .ofType(Integer.class)
-        .defaultsTo(5000);
+        .ofType(Long.class)
+        .defaultsTo((long)5000);
     optionParser.acceptsAll(asList("d", "delay"))
         .withRequiredArg()
-        .ofType(Integer.class)
-        .defaultsTo(20000);
+        .ofType(Long.class)
+        .defaultsTo((long)20000);
 
     optionParser.acceptsAll(asList("r", "range"))
         .withRequiredArg()

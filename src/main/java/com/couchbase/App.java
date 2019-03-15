@@ -65,7 +65,7 @@ public class App {
     OPS.setOps(options);
 
     while (true) {
-      while (count.get() > options.<Integer>valueOf("queue")) {
+      while (count.get() > options.<Long>valueOf("queue")) {
         try {
           TimeUnit.MICROSECONDS.sleep(options.valueOf("delay"));
         } catch (InterruptedException ex) {
@@ -171,8 +171,8 @@ public class App {
 
     Cluster cluster = CouchbaseCluster.create(DefaultCouchbaseEnvironment.builder()
         .tracer(tracer)
-        .operationTracingEnabled(true)
-        .operationTracingServerDurationEnabled(true)
+        //.operationTracingEnabled(true)  // `true` by default
+        //.operationTracingServerDurationEnabled(true) // `true` by default
         .build(), nodes);
 
     cluster.authenticate(options.valueOf("user"), options.valueOf("password"));
@@ -181,9 +181,9 @@ public class App {
   }
 
   private static void prepareCaches(Options options) {
-    docIDs = bucket.query(N1qlQuery.simple( "SELECT META().id FROM `" + bucketName + "`;"))
+    docIDs = bucket.query(N1qlQuery.simple( "SELECT RAW META().id FROM `" + bucketName + "`;"))
         .flatMap(AsyncN1qlQueryResult::rows)
-        .map(row -> (String)row.value().get("id"))
+        .map(row -> new String(Arrays.copyOfRange(row.byteValue(), 1, row.byteValue().length - 1)))
         .toList()
         .toBlocking()
         .single();
