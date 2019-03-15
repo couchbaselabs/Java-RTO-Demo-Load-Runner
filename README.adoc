@@ -9,6 +9,9 @@ It performs random operations against a Couchbase bucket.
 
 The design has been optimized to generate a high request rate.
 
+`mvn compile`
+
+`mvn exec:java -Dexec.args="-h"`
 
 
 Licensed under link:https://opensource.org/licenses/Apache-2.0[Apache 2.0].
