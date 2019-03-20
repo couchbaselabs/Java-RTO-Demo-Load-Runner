@@ -9,9 +9,65 @@ It performs random operations against a Couchbase bucket.
 
 The design has been optimized to generate a high request rate.
 
+Build with
+
 `mvn compile`
 
+Run with
+
 `mvn exec:java -Dexec.args="-h"`
+
+For example
+
+`mvn exec:java -Dexec.args="-c localhost -b default -u admin -p password"`
+
+Or package a jar file and run with a vanilla Java command line.
+
+Run
+
+`mvn package`
+
+to create
+
+`target/rto-1.0.jar`
+
+Run with
+
+`java -jar target/rto-1.0.jar -c <cluster> -b <bucket> -u <user> -p <password>`
+
+Options:
+
+See `Options.java` for all the options.
+
+`-r` sets the number of documents taken from the bucket to use in KV operations, which includes mutations and removals.
+The documents are cached by the app.
+
+
+`-s` sets the sample size logged by the threshold tracer
+
+`-K` sets the KV timeout.
+Operations taking longer than this will get recorded by the threshold tracer.
+(This has no effect with other tracers.)
+
+`-q` sets the number of KV ops to queue before delaying to let them drain.
+
+`-d` sets the delay time to allow ops to drain.  This along with `-q` throttles generation of ops so as not to overrun the SDK internal queue.
+
+`-e` selects the operations to run.  Look at the enum in App.java for the list.  For example, to run just gets, use `-e GET`.
+
+Examples:
+
+`java -Dcom.couchbase.operationTracingEnabled=false -jar target/rto-1.0.jar`
+
+runs with tracing completely disabled.  (`-D` sets a system property.  See the Couchbase Java SDK docs for these.)
+
+`java -jar target/rto-1.0.jar -u admin -p password -K 100 -e GET`
+
+runs against localhost using the travel-sample bucket with KV threshold tracer timeout set to 100ms, and only `get` operations.
+
+`java -DJAEGER_REPORTER_LOG_SPANS=true -jar target/rto-1.0.jar -c ec2-54-215-184-156.us-west-1.compute.amazonaws.com -u admin -p password -j localhost -t jaeger`
+
+runs with Jaeger tracing enabled (`-t`) and Jaeger on the localhost (`-j localhost`).
 
 
 Licensed under link:https://opensource.org/licenses/Apache-2.0[Apache 2.0].
