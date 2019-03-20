@@ -44,7 +44,7 @@ public class Options {
     optionParser.acceptsAll(asList("l", "log"))
         .withRequiredArg()
         .ofType(Long.class)
-        .defaultsTo((long)10);
+        .defaultsTo((long) 10);
     optionParser.acceptsAll(asList("K", "kv-threshold"))
         .withRequiredArg()
         .ofType(Long.class)
@@ -61,11 +61,11 @@ public class Options {
     optionParser.acceptsAll(asList("q", "queue"))
         .withRequiredArg()
         .ofType(Long.class)
-        .defaultsTo((long)5000);
+        .defaultsTo((long) 5000);
     optionParser.acceptsAll(asList("d", "delay"))
         .withRequiredArg()
         .ofType(Long.class)
-        .defaultsTo((long)20000);
+        .defaultsTo((long) 20000);
 
     optionParser.acceptsAll(asList("r", "range"))
         .withRequiredArg()
